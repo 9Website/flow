@@ -1,4 +1,19 @@
 if (hasWebGLSupportWithExtensions(['OES_texture_float'])) {
+    // The original quality table stops at 2M particles. These larger levels use
+    // dimensions that stay within common WebGL texture limits while preserving
+    // the requested particle counts.
+    QUALITY_LEVELS.push(
+        { resolution: [5000, 2000], diameter: 0.008, alpha: 0.18 }, // 10M
+        { resolution: [5000, 5000], diameter: 0.007, alpha: 0.16 }, // 25M
+        { resolution: [10000, 5000], diameter: 0.006, alpha: 0.14 }, // 50M
+        { resolution: [10000, 7500], diameter: 0.005, alpha: 0.12 }, // 75M
+        { resolution: [10000, 10000], diameter: 0.004, alpha: 0.10 } // 100M
+    );
+
+    // Every configured level is divisible by 64, including the new levels.
+    // Using 64 slices also keeps drawArrays counts integral at high counts.
+    SLICES = 64;
+
     var flow = new Flow(document.getElementById('render'));
 
     flow.setHue(0);
@@ -19,7 +34,12 @@ if (hasWebGLSupportWithExtensions(['OES_texture_float'])) {
         document.getElementById('count-18'),
         document.getElementById('count-19'),
         document.getElementById('count-20'),
-        document.getElementById('count-21')
+        document.getElementById('count-21'),
+        document.getElementById('count-22'),
+        document.getElementById('count-23'),
+        document.getElementById('count-24'),
+        document.getElementById('count-25'),
+        document.getElementById('count-26')
     ], function (index) {
         flow.changeQualityLevel(index);
     });
